@@ -1,4 +1,9 @@
 import { openDB } from "../src/configDB.js";
+import bscrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export async function createTable() {
     openDB().then(async (db) => {
@@ -10,8 +15,17 @@ export async function createTable() {
 }
 
 export async function insertUser(username, password, email, name, fav_leader) {
+    const userExists = await openDB().then(async (db) => {
+        const user = await db.get(`SELECT * FROM users WHERE email = ?`, [email]);
+        return user;
+    })
+    if (userExists) {
+       return { message: 'Email already exists', status: 400 };
+    }
+    const hashedPassword = await bscrypt.hash(password, 10);
     openDB().then(async (db) => {
-        await db.run(`INSERT INTO users (username, password, email, name, fav_leader) VALUES (?, ?, ?, ?, ?)`, [username, password, email, name, fav_leader]);
+        await db.run(`INSERT INTO users (username, password, email, name, fav_leader) VALUES (?, ?, ?, ?, ?)`, [username, hashedPassword, email, name, fav_leader])
+        return { message: 'User registered successfully', status: 201 };
     })
 }
 
@@ -27,11 +41,20 @@ export async function deleteUser(id) {
     })
 }
 
-export async function loginUser(username, password) {
-    return openDB().then(async (db) => {
-        const user = await db.get(`SELECT * FROM users WHERE username = ? AND password = ?`, [username, password]);
+export async function loginUser(email, password) {
+    const user = await openDB().then(async (db) => {
+        const user = await db.get(`SELECT * FROM users WHERE email = ?`, [email]);
         return user;
     })
+    if (!user) {
+        return { message: 'Email or password is incorrect', status: 404 };
+    }
+    const isPasswordValid = await bscrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+        return { message: 'Email or password is incorrect', status: 401 };
+    }
+    const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    return { message: 'Login successful', token, user: { id: user.id, username: user.username, email: user.email, name: user.name, fav_leader: user.fav_leader } };
 }
 
 export async function getUserById(id) {
@@ -43,7 +66,7 @@ export async function getUserById(id) {
 
 export async function getAllUsers() {
     return openDB().then(async (db) => {
-        const query = await db.get(`SELECT * FROM users`);
+        const query = await db.all(`SELECT * FROM users`);
         return query
     })
 }

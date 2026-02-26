@@ -4,15 +4,8 @@ import { Router } from 'express';
 const userRouter = Router();
 
 userRouter.post('/register', async (req, res) => {
-    insertUser(req.body.username, req.body.password, req.body.email, req.body.name, req.body.fav_leader);
-    res.status(201).json({ 
-        message: 'User registered successfully',
-        user: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-        name: req.body.name,
-        fav_leader: req.body.fav_leader
-    });
+    const result = insertUser(req.body.username, req.body.password, req.body.email, req.body.name, req.body.fav_leader);
+    res.status(result.status || 201).json({result});
 })
 
 userRouter.put('/edit/:id', async (req, res) => {
@@ -49,9 +42,23 @@ userRouter.get('/profile', async (req, res) => {
 
 userRouter.get('/allUsers', async (req, res) => {
     let users = await getAllUsers();
+    const result = users.map(user => {
+        return {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            name: user.name,
+            fav_leader: user.fav_leader
+        }
+    })
     res.status(200).json({
-        users
+        result
     });
+})
+
+userRouter.get('/login', async (req, res) => {
+    const result = await loginUser(req.body.email, req.body.password);
+    res.status(result.status || 200).json(result);
 })
 
 export default userRouter;
