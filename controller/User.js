@@ -59,7 +59,7 @@ export async function loginUser(email, password) {
 
 export async function getUserById(id) {
     return openDB().then(async (db) => {
-        const user = await db.get(`SELECT * FROM users WHERE id = ?`, [id]);
+        const user = await db.get(`SELECT id, username, email, name, fav_leader FROM users WHERE id = ?`, [id]);
         return user;
     })
 }

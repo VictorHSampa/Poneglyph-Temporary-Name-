@@ -2,13 +2,27 @@ import { insertUser, editUser, deleteUser, loginUser, getUserById, getAllUsers }
 import express from 'express';
 import { Router } from 'express';
 const userRouter = Router();
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) return res.status(401).json({ message: 'No token provided' });
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ message: 'Invalid token' });
+        req.user = user;
+        next();
+});}
 
 userRouter.post('/register', async (req, res) => {
     const result = insertUser(req.body.username, req.body.password, req.body.email, req.body.name, req.body.fav_leader);
     res.status(result.status || 201).json({result});
 })
 
-userRouter.put('/edit/:id', async (req, res) => {
+userRouter.put('/edit/:id', authenticateToken, async (req, res) => {
     editUser(req.params.id, req.body.username, req.body.password, req.body.email, req.body.name, req.body.fav_leader);
     res.status(200).json({
         message: 'User updated successfully',
@@ -27,8 +41,8 @@ userRouter.delete('/delete/:id', async (req, res) => {
     });
 })
 
-userRouter.get('/profile', async (req, res) => {
-    const user = await getUserById(req.body.id);
+userRouter.get('/profile/:id', authenticateToken, async (req, res) => {
+    const user = await getUserById(req.params.id);
     if (user) {
         res.status(200).json({
             user: user
