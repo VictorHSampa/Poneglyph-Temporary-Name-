@@ -65,9 +65,9 @@ userRouter.get('/allUsers', async (req, res) => {
             fav_leader: user.fav_leader
         }
     })
-    res.status(200).json({
+    res.status(200).json(
         result
-    });
+    );
 })
 
 userRouter.get('/login', async (req, res) => {
