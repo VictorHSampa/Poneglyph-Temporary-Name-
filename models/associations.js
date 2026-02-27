@@ -5,3 +5,4 @@ import User from '../Models/users.js'
 Leader.belongsTo(Color, { foreignKey: 'color1' })
 Leader.belongsTo(Color, { foreignKey: 'color2' })
 User.belongsTo(Leader, { foreignKey: 'fav_leader' })
+Leader.hasMany(User, { foreignKey: 'fav_leader' })
