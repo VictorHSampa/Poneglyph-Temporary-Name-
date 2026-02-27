@@ -1,9 +1,15 @@
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+import { Sequelize } from 'sequelize'
 
-export async function openDB() {
-  return open({
-    filename: './app.db',
-    driver: sqlite3.Database
-  });
+const sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: 'database.db'
+})
+
+try {
+    await sequelize.authenticate()
+    console.log('Banco de dados inicializado com sucesso!')
+} catch (error) {
+    console.error('Erro ao inicializar o banco de dados: ', error)
 }
+
+export default sequelize

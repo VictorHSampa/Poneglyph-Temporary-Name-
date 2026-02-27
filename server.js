@@ -1,9 +1,13 @@
-import { openDB } from './src/configDB.js';
+import sequelize  from './src/configDB.js';
 import user from './routes/User.js';
 import express from 'express';
 import cors from 'cors';
-import { createTable } from './controller/User.js';
 
+/*sequelize.sync().then(() => {
+    console.log('Tabelas criadas com sucesso!');
+}).catch((error) => {
+    console.error('Erro ao criar as tabelas: ', error);
+});*/
 const app = express()
 const port = 3000
 

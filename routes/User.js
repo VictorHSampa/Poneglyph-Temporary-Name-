@@ -18,16 +18,15 @@ function authenticateToken(req, res, next) {
 });}
 
 userRouter.post('/register', async (req, res) => {
-    const result = insertUser(req.body.username, req.body.password, req.body.email, req.body.name, req.body.fav_leader);
+    const result = insertUser(req.body.username, req.body.password, req.body.email, req.body.fav_leader);
     res.status(result.status || 201).json({result});
 })
 
 userRouter.put('/edit/:id', authenticateToken, async (req, res) => {
-    editUser(req.params.id, req.body.username, req.body.password, req.body.email, req.body.name, req.body.fav_leader);
+    editUser(req.params.id, req.body.username, req.body.password, req.body.email, req.body.fav_leader);
     res.status(200).json({
         message: 'User updated successfully',
         user: req.body.username,
-        password: req.body.password,
         email: req.body.email,
         name: req.body.name,
         fav_leader: req.body.fav_leader
@@ -55,13 +54,12 @@ userRouter.get('/profile/:id', authenticateToken, async (req, res) => {
 })
 
 userRouter.get('/allUsers', async (req, res) => {
-    let users = await getAllUsers();
+    let users = await getAllUsers(req, res);
     const result = users.map(user => {
         return {
             id: user.id,
             username: user.username,
             email: user.email,
-            name: user.name,
             fav_leader: user.fav_leader
         }
     })
