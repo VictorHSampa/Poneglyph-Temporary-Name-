@@ -13,10 +13,6 @@ const User = db.define('user', {
     email: {
         type: Sequelize.STRING,
         allowNull: false
-    },
-    fav_leader: {
-        type: Sequelize.INTEGER,
-        allowNull: false
     }
 })
 

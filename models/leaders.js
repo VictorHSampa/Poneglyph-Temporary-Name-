@@ -11,12 +11,11 @@ const Leader = db.define('leader', {
         allowNull: false
     },
     color1: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false
     },
     color2: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: Sequelize.STRING
     }
 })
 

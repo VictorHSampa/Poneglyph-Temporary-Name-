@@ -21,8 +21,8 @@ userRouter.post('/register', async (req, res) => {
     const result = insertUser(req.body.username, req.body.password, req.body.email, req.body.fav_leader);
     res.status(result.status || 201).json({result});
 })
-
-userRouter.put('/edit/:id', authenticateToken, async (req, res) => {
+// authenticateToken,
+userRouter.put('/edit/:id', async (req, res) => {
     editUser(req.params.id, req.body.username, req.body.password, req.body.email, req.body.fav_leader);
     res.status(200).json({
         message: 'User updated successfully',
@@ -40,12 +40,12 @@ userRouter.delete('/delete/:id', async (req, res) => {
     });
 })
 
-userRouter.get('/profile/:id', authenticateToken, async (req, res) => {
+userRouter.get('/profile/:id', async (req, res) => {
     const user = await getUserById(req.params.id);
     if (user) {
-        res.status(200).json({
-            user: user
-        });
+        res.status(200).json(
+            user
+        );
     } else {
         res.status(404).json({
             message: 'User not found'

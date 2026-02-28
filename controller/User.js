@@ -3,6 +3,7 @@ import bscrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import User from '../Models/users.js'
+import Leader from '../Models/leaders.js'
 
 dotenv.config();
 
@@ -59,11 +60,20 @@ export async function loginUser(email, password) {
 }
 
 export async function getUserById(id) {
-    const user = await User.findByPk(id, { attributes: { exclude: ['password', 'createdAt', 'updatedAt'] } });
+    const user = await User.findByPk(id, { attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }, include: 'leader' });
+    
     if (!user) {
         return { message: 'User not found', status: 404 };
     }
-    return user;
+    const result = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        fav_leader: user.leader.name,
+        leader_image: user.leader.image
+    }
+
+    return result;
 }
 
 export async function getAllUsers(req, res) {
