@@ -55,7 +55,7 @@ export async function loginUser(email, password) {
     if (!isPasswordValid) {
         return { message: 'Email or password is incorrect', status: 401 };
     }
-    const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '48h' });
     return { message: 'Login successful', token, user: { id: user.id, username: user.username, email: user.email, fav_leader: user.fav_leader } };
 }
 

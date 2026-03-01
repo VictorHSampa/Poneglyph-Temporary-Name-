@@ -40,7 +40,7 @@ userRouter.delete('/delete/:id', async (req, res) => {
     });
 })
 
-userRouter.get('/profile/:id', async (req, res) => {
+userRouter.get('/profile/:id',authenticateToken, async (req, res) => {
     const user = await getUserById(req.params.id);
     if (user) {
         res.status(200).json(
@@ -68,7 +68,7 @@ userRouter.get('/allUsers', async (req, res) => {
     );
 })
 
-userRouter.get('/login', async (req, res) => {
+userRouter.post('/login', async (req, res) => {
     const result = await loginUser(req.body.email, req.body.password);
     res.status(result.status || 200).json(result);
 })
