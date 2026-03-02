@@ -18,13 +18,13 @@ function authenticateToken(req, res, next) {
 });}
 
 userRouter.post('/register', async (req, res) => {
-    const result = insertUser(req.body.username, req.body.password, req.body.email, req.body.fav_leader);
-    res.status(result.status || 201).json({result});
+    const result = await insertUser(req.body.username, req.body.password, req.body.email, req.body.fav_leader);
+    res.status(result.status || 201).json(result);
 })
 // authenticateToken,
 userRouter.put('/edit/:id', async (req, res) => {
-    editUser(req.params.id, req.body.username, req.body.password, req.body.email, req.body.fav_leader);
-    res.status(200).json({
+    const result = await editUser(req.params.id, req.body.username, req.body.password, req.body.email, req.body.fav_leader);
+    res.status(result && result.status ? result.status : 200).json(result || {
         message: 'User updated successfully',
         user: req.body.username,
         email: req.body.email,

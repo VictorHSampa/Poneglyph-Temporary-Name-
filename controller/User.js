@@ -9,6 +9,10 @@ dotenv.config();
 
 
 export async function insertUser(username, password, email, fav_leader) {
+    if (!password) {
+        return { message: 'Password is required', status: 400 };
+    }
+
     const hashedPassword = await bscrypt.hash(password, 10);
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
@@ -19,7 +23,7 @@ export async function insertUser(username, password, email, fav_leader) {
     try {
         await user.validate()
     } catch(error) {
-        return res.status(400).json({ message: error.message })
+        return { message: error.message, status: 400 };
     }
      
     try {
@@ -32,10 +36,14 @@ export async function insertUser(username, password, email, fav_leader) {
 }
 
 export async function editUser(id, username, password, email, fav_leader) {
-    
-        const hashedPassword = await bscrypt.hash(password, 10);
-        User.update({ username, password: hashedPassword, email, fav_leader }, { where: { id } });
-        return { message: 'User updated successfully' };
+    // build update object, hash password only if provided
+    const updates = { username, email, fav_leader };
+    if (password) {
+        updates.password = await bscrypt.hash(password, 10);
+    }
+
+    await User.update(updates, { where: { id } });
+    return { message: 'User updated successfully' };
 }
 
 export async function deleteUser(id) {
