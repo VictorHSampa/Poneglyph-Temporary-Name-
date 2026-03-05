@@ -36,7 +36,7 @@ export async function insertUser(username, password, email, fav_leader) {
 }
 
 export async function editUser(id, username, password, email, fav_leader) {
-    // build update object, hash password only if provided
+   
     const updates = { username, email, fav_leader };
     if (password) {
         updates.password = await bscrypt.hash(password, 10);

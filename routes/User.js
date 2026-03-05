@@ -40,8 +40,8 @@ userRouter.delete('/delete/:id', async (req, res) => {
     });
 })
 
-userRouter.get('/profile/:id',authenticateToken, async (req, res) => {
-    const user = await getUserById(req.params.id);
+userRouter.get('/profile',authenticateToken, async (req, res) => {
+    const user = await getUserById(req.user.id);
     if (user) {
         res.status(200).json(
             user

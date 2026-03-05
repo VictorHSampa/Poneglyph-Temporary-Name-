@@ -8,7 +8,7 @@ export async function insertTournament(title, date, placement, userId, leaderId,
 }
 
 export async function getTournamentById(id) {
-    const tournament = await Tournament.findByPk(id, { include: ['leader', 'opset', 'tournamentType'] });
+    const tournament = await Tournament.findByPk(id, { include: ['leader', 'opSet', 'tournamentType'] });
     
     if (!tournament) {
         return { message: 'tournament not found', status: 404 };
@@ -22,7 +22,7 @@ export async function getTournamentById(id) {
         leader: tournament.leader.name,
         leader_image: tournament.leader.image,
         set: tournament.opSet.code,
-        type: tournament.tournamentType.name
+        type: tournament.tournamentType.name,
     }
 
     return result;
