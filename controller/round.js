@@ -1,21 +1,22 @@
 import Round from '../models/round.js'
 
-export async function insertRound(roundNumber, result, dice, first) {
+export async function insertRound( result, dice, first) {
 
-    const round = await Round.create({ roundNumber, result, dice, first})
+    const round = await Round.create({ result, dice, first})
 
-    return {round}
+    try {
+        await round.validate()
+    } catch(error) {
+        return { message: error.message, status: 400 };
+    }
+     
+    try {
+        await round.save()
+
+        return { message: 'Round created successfully', round };
+    } catch(error) {
+        return { message: error.message, status: 500 };
+    }
+
 }
 
-export async function getRounds() {
-    const round = await round.findAll(id);
-    
-    if (!tournament) {
-        return { message: 'round not found', status: 404 };
-    }
-    const result = {
-
-    }
-
-    return result;
-}

@@ -4,14 +4,25 @@ export async function insertTournament(title, date, placement, userId, leaderId,
 
     const tournament = await Tournament.create({ title, date, placement, userId, leaderId, setId, tournamentTypeId})
 
-    return {tournament}
+     try {
+        await tournament.validate()
+    } catch(error) {
+        return { message: error.message, status: 400 };
+    }
+    try {
+        await tournament.save()
+
+        return { message: 'Tournament created successfully', tournament };
+    } catch(error) {
+        return { message: error.message, status: 500 };
+    }
 }
 
 export async function getTournamentById(id) {
-    const tournament = await Tournament.findByPk(id, { include: ['leader', 'opSet', 'tournamentType'] });
+    const tournament = await Tournament.findByPk(id, { include: ['leader', 'opSet', 'tournamentType', 'round'] });
     
     if (!tournament) {
-        return { message: 'tournament not found', status: 404 };
+        return { message: 'Tournament not found', status: 404 };
     }
     const result = {
         id: tournament.id,
@@ -23,6 +34,14 @@ export async function getTournamentById(id) {
         leader_image: tournament.leader.image,
         set: tournament.opSet.code,
         type: tournament.tournamentType.name,
+        rounds: tournament.rounds.map(round => {
+            return {
+                roundNumber: round.roundNumber,
+                result: round.result,
+                dice: round.dice,
+                first: round.first
+            }
+        })
     }
 
     return result;
