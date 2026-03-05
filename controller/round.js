@@ -20,3 +20,9 @@ export async function insertRound( result, dice, first, tournamentId) {
 
 }
 
+export async function getAllRounds(id) {
+    
+    const round = await Round.findAll({ where: {tournamentId: id }});
+    return round;
+}
+
