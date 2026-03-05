@@ -1,6 +1,7 @@
 import sequelize  from './src/configDB.js';
 import user from './routes/User.js';
 import tournament from './routes/tournament.js'
+import round from './routes/round.js'
 import express from 'express';
 import cors from 'cors';
 import './models/associations.js'
@@ -19,6 +20,7 @@ app.use(cors());
 
 app.use('/user', user);
 app.use('/tournament', tournament);
+app.use('/round', round);
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`)

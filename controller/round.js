@@ -1,8 +1,8 @@
 import Round from '../models/round.js'
 
-export async function insertRound( result, dice, first) {
+export async function insertRound( result, dice, first, tournamentId) {
 
-    const round = await Round.create({ result, dice, first})
+    const round = await Round.create({ result, dice, first, tournamentId})
 
     try {
         await round.validate()
