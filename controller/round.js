@@ -12,12 +12,18 @@ export async function insertRound( result, dice, first, tournamentId) {
      
     try {
         await round.save()
-
         return { message: 'Round created successfully', round };
     } catch(error) {
         return { message: error.message, status: 500 };
     }
 
+}
+
+export async function editRound(id, result, dice, first) {
+    const updates = { result, dice, first };
+
+    await Round.update(updates, { where: { id } });
+    return { message: 'Round updated successfully' };
 }
 
 export async function getAllRounds(id) {

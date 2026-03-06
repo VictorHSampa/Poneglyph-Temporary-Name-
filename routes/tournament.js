@@ -5,7 +5,7 @@ const tournamentRouter = Router();
 
 tournamentRouter.post('/register', async (req, res) => {
     const result = insertTournament(req.body.title, req.body.date, req.body.placement, req.body.user, req.body.leader, req.body.set, req.body.type);
-    res.status(201).json({result});
+    res.status(result.status || 201).json(result);
 })
 
 tournamentRouter.get('/search/:id', async (req, res) => {
