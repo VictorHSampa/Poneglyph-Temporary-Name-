@@ -18,6 +18,13 @@ export async function insertTournament(title, date, placement, userId, leaderId,
     }
 }
 
+export async function editTournament(id, title, date, placement, leaderId, setId, tournamentTypeId) {
+    const updates = { title, date, placement, leaderId, setId, tournamentTypeId };
+
+    await Tournament.update(updates, { where: { id } });
+    return { message: 'Tournament updated successfully' };
+}
+
 export async function getTournamentById(id) {
     const tournament = await Tournament.findByPk(id, { include: ['leader', 'opSet', 'tournamentType'] });
     
