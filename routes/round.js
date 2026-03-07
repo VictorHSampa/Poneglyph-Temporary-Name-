@@ -4,12 +4,12 @@ import { Router } from 'express';
 const roundRouter = Router();
 
 roundRouter.post('/register', async (req, res) => {
-    const result = insertRound(req.body.result, req.body.dice, req.body.first, req.body.tournament);
+    const result = insertRound(req.body.result, req.body.dice, req.body.first, req.body.tournament, req.body.comment);
     res.status(result.status || 201).json(result);
 })
 
 roundRouter.put('/edit/:id', async (req, res) => {
-    const result = await editRound(req.params.id, req.body.result, req.body.dice, req.body.first);
+    const result = await editRound(req.params.id, req.body.result, req.body.dice, req.body.first, req.body.comment);
     res.status(result && result.status ? result.status : 200).json(result || {
         message: 'Round updated successfully'
     });

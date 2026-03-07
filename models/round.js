@@ -13,6 +13,9 @@ const Round = db.define('round', {
     first:{
         type: Sequelize.BOOLEAN,
         allowNull: false
+    },
+    comment:{
+        type:Sequelize.STRING
     }
     
 })
