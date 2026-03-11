@@ -45,3 +45,9 @@ export async function getTournamentById(id) {
 
     return result;
 }
+
+export async function getAllTournament(id) {
+    
+    const tournament = await Tournament.findAll({ where: {userId: id }, include: ['leader', 'opSet', 'tournamentType']});
+    return tournament;
+}

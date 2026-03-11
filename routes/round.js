@@ -4,7 +4,8 @@ import { Router } from 'express';
 const roundRouter = Router();
 
 roundRouter.post('/register', async (req, res) => {
-    const result = insertRound(req.body.result, req.body.dice, req.body.first, req.body.tournament, req.body.comment);
+ 
+    const result = await insertRound(req.body.result, req.body.dice, req.body.first, req.body.tournament, req.body.comment);
     res.status(result.status || 201).json(result);
 })
 
